@@ -16,5 +16,5 @@ $ rye sync
 ### Execution
 
 ```bash
-rye run python src/fave_relations/main.py && open example.html
+rye run python src/fave_relations/main.py && open output/index.html
 ```
