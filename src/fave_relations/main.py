@@ -145,4 +145,4 @@ net = Network()
 net.from_nx(G)
 net.select_menu = True
 net.cdn_resources = "remote"
-net.show("output/index.html", notebook=False)
+net.show("docs/index.html", notebook=False)
