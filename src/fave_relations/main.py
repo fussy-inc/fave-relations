@@ -4,6 +4,7 @@ from pyvis.network import Network
 import io
 from dataclasses import dataclass
 
+
 @dataclass
 class Fave:
     name: str
@@ -12,16 +13,15 @@ class Fave:
     def __hash__(self) -> int:
         return hash(self.name)
 
-def find_or_create_fave(
-        faves: set[Fave],
-        name: str
-) -> Fave:
+
+def find_or_create_fave(faves: set[Fave], name: str) -> Fave:
     for fave in faves:
         if fave.name == name:
             return fave
     fave = Fave(name, 0)
     faves.add(fave)
     return fave
+
 
 def node_size(fave: Fave) -> int:
     # if fave.count < 5:
@@ -32,6 +32,7 @@ def node_size(fave: Fave) -> int:
     #     return 30
     return fave.count * 5
 
+
 @dataclass
 class FaveRelation:
     source: Fave
@@ -41,77 +42,74 @@ class FaveRelation:
     def __hash__(self) -> int:
         return hash((self.source, self.target)) + hash((self.target, self.source))
 
+
 def find_or_create_relation(
-        relations: set[FaveRelation],
-        source: Fave,
-        target: Fave
+    relations: set[FaveRelation], source: Fave, target: Fave
 ) -> FaveRelation:
     for relation in relations:
-        if (relation.source == source and relation.target == target) or (relation.source == target and relation.target == source):
+        if (relation.source == source and relation.target == target) or (
+            relation.source == target and relation.target == source
+        ):
             return relation
     relation = FaveRelation(source, target, 0)
     relations.add(relation)
     return relation
 
+
 def relation_weight(relation: FaveRelation) -> float:
     return relation.weight * 10
 
-df = pd.read_csv(io.StringIO('''
+
+df = pd.read_csv(
+    io.StringIO(
+        """
 1,2,3
-あらゐけいいち,真空ジェシカ,真っ白なキャンバス
-推しの子,くりぃむしちゅー,シバタリアン
-こちら葛飾区亀有公園前派出所,あらゐけいいち,くりぃむしちゅー
-笹見つく音,ぼっち・ざ・ろっく！,BLACKPINK
-ブラッシュアップライフ,満島ひかり,ドラゴンボール
-姫様“拷問”の時間です,アフロ田中,茨木のり子
-BTS,あらゐけいいち,マッシュル -MASHLE-
-さらば青春の光,こちら葛飾区亀有公園前派出所,金色のガッシュ！！
-少女時代,ONE PIECE,ケツメイシ
-BTS,宇多田ヒカル,RDG レッドデータガール
-ONE PIECE,サカナクション,Angel Beats!
-バックドロップシンデレラ,SHIORI EXPERIENCE,宇多田ヒカル
-金属バット,くりぃむしちゅー,サカナクション
-新世紀エヴァンゲリオン,左ききのエレン,響け! ユーフォニアム
-響け! ユーフォニアム,赤西仁,新世紀エヴァンゲリオン
-バーバパパ,僕が見たかった青空,姫様“拷問”の時間です
-範馬刃牙,らき☆すた,彼方のアストラ
-ドラゴンボール,乃木坂46,新世紀エヴァンゲリオン
-くりぃむしちゅー,響け! ユーフォニアム,さらば青春の光
-姫様“拷問”の時間です,響け! ユーフォニアム,青春ブタ野郎シリーズ
-真っ白なキャンバス,BTS,真空ジェシカ
-OOPARTZ,RDG レッドデータガール,チェンソーマン
-青春ブタ野郎シリーズ,真っ白なキャンバス,左ききのエレン
-少年ジャンプ＋,カルテット,推しの子
-少女時代,こちら葛飾区亀有公園前派出所,くりぃむしちゅー
-真っ白なキャンバス,赤西仁,乃木坂46
-らき☆すた,彼方のアストラ,新世紀エヴァンゲリオン
-aiko,バックドロップシンデレラ,First Love 初恋
-少女時代,ブラッシュアップライフ,SHIORI EXPERIENCE
-少女時代,らき☆すた,櫻坂46
-青春ブタ野郎シリーズ,最果タヒ,茨木のり子
-バーバパパ,ラランド,RDG レッドデータガール
-青春ブタ野郎シリーズ,乃木坂46,真っ白なキャンバス
-真空ジェシカ,ONE PIECE,えなこ
-ブラッシュアップライフ,推しの子,First Love 初恋
-SHIORI EXPERIENCE,BTS,カルテット
-チェンソーマン,バックドロップシンデレラ,バーバパパ
-青春ブタ野郎シリーズ,推しの子,BTS
-あらゐけいいち,アフロ田中,ぼっち・ざ・ろっく！
-ブラッシュアップライフ,らき☆すた,真空ジェシカ
-RDG レッドデータガール,First Love 初恋,ONE PIECE
-aiko,こちら葛飾区亀有公園前派出所,バーバパパ
-First Love 初恋,少女時代,OOPARTZ
-左ききのエレン,BTS,櫻坂46
-赤西仁,ブルージャイアント,僕が見たかった青空
-BLACK LAGOON,ケツメイシ,らき☆すた
-青春ブタ野郎シリーズ,少女時代,マッシュル -MASHLE-
-金色のガッシュ！！,こちら葛飾区亀有公園前派出所,彼方のアストラ
-響け! ユーフォニアム,シバタリアン,推しの子
-First Love 初恋,真っ白なキャンバス,乃木坂46
-こちら葛飾区亀有公園前派出所,くりぃむしちゅー,金属バット
-マッシュル -MASHLE-,赤西仁,ONE PIECE
-Angel Beats!,笹見つく音,ONE PIECE
-'''))
+さらば青春の光,乃木坂46,ダイアン
+カゲヤマ,さらば青春の光,和賀勇介
+ふぉ〜ゆ〜,梅棒,さらば青春の光
+さらば青春の光,ニューヨーク,千鳥
+さらば青春の光,SnowMan,もも
+さらば青春の光,金属バット,チュートリアル
+さらば青春の光,BKB,みなみかわ
+さらば青春の光,ハリウッドザコシショウ,陣内智則
+男性ブランコ,囲碁将棋,ケビンス
+鬼ヶ島,シティホテル3号室,都トム
+さらば青春の光,見取り図,令和喜多みな実
+関ジャニ∞,さらば青春の光,ジャニーズWEST
+さらば青春の光,乃木坂46,バナナマン
+さらば青春の光,オリエンタルラジオ,ラランド
+少女時代,SCANDAL,aespa
+KinKi Kids,Mr.Children,ユニゾンスクエアガーデン
+ミツメ,カネコアヤノ,LAYRUS LOOP
+千鳥,かまいたち,ZARD
+IVE,aespa,ルセラフィム
+THE RAMPAGE,ナイツ,さらば青春の光
+澤野弘之,鷺巣詩郎,松谷卓
+YOASOBI,King Gnu,マハラージャン
+ダウンタウン,霜降り明星,ナダル
+aiko,Official髭男dism,私立恵比寿中学
+ポルカドットスティングレイ ,ポルノグラフィティ,椎名林檎
+さらば青春の光,BUMP OF CHICKEN,オードリー
+ピーナッツくん,金属バット,PUNPEE
+なにわ男子,櫻坂46,福田晋一
+女王蜂,米津玄師,星野源
+嵐,オードリー,Sexy Zone
+星野源,ずん（飯尾和樹）,なかやまきんに君
+浦島坂田船,After the Rain,ゴールデンボンバー
+Aぇ! group,beyooooonds,よゐこ
+パスピエ,ジャルジャル,beyooooonds
+鈴木愛理,岡田准一,ヒコロヒー
+ハリウッドザコシショウ,粗品,さらば青春の光
+チョコレートプラネット,霜降り明星、Kep1er,ラランド
+バキ童（春と紙ヒコーキ）,千鳥,笑い飯
+スピッツ,千鳥,サザンオールスターズ
+東京03,ジョングク,CHEMISTRY 
+トータルテンボス,ダイアン,さらば青春の光
+せかいのおわり,スーパーフライ,YOASOBI
+さらば青春の光,小山田壮平,never young beach
+"""
+    )
+)
 
 faves = set()
 relations = set()
@@ -139,12 +137,12 @@ for fave in faves:
     G.add_node(fave.name, size=node_size(fave))
 
 for relation in relations:
-    G.add_edge(relation.source.name, relation.target.name, weight=relation_weight(relation))
+    G.add_edge(
+        relation.source.name, relation.target.name, weight=relation_weight(relation)
+    )
 
 net = Network()
 net.from_nx(G)
 net.select_menu = True
 net.cdn_resources = "remote"
-net.show("example.html", notebook=False)
-
-
+net.show("output/index.html", notebook=False)

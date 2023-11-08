@@ -1,7 +1,7 @@
 [project]
 name = "fave-relations"
 version = "0.1.0"
-description = "Add your description here"
+description = "Fave Relation Visualizer"
 authors = [
     { name = "funwarioisii", email = "kazuyukihashimoto2006@gmail.com" }
 ]
@@ -21,7 +21,7 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = [
-    "black>=23.9.1",
+    "black>=23.11.0",
 ]
 
 [tool.hatch.metadata]
