@@ -105,8 +105,9 @@ Aぇ! group,beyooooonds,よゐこ
 スピッツ,千鳥,サザンオールスターズ
 東京03,ジョングク,CHEMISTRY 
 トータルテンボス,ダイアン,さらば青春の光
-せかいのおわり,スーパーフライ,YOASOBI
+せかいのおわり,Superfly,YOASOBI
 さらば青春の光,小山田壮平,never young beach
+男性ブランコ,NU'EST,ななまがり
 """
     )
 )
